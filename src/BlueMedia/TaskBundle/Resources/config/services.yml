@@ -1,0 +1,4 @@
+services:
+#    blue_media_task.example:
+#        class: BlueMedia\TaskBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

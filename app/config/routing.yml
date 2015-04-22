@@ -1,0 +1,9 @@
+blue_media_task:
+    type: rest
+    resource: "@BlueMediaTaskBundle/Resources/config/routing.yml"
+    prefix:   /
+
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
+
