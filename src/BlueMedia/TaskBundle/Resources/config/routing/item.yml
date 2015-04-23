@@ -1,30 +1,32 @@
+#itemy - opcjonalnie parametry: inStock( bool ) , minStock ( int )
 item:
     path:     /
-    defaults: { _controller: "BlueMediaTaskBundle:Item:index" }
+    defaults: { _controller: "BlueMediaTaskBundle:Item:getItems" }
+    methods: [GET]
 
+#pobranie jednego itemu
 item_show:
-    path:     /{id}/show
-    defaults: { _controller: "BlueMediaTaskBundle:Item:show" }
-
-item_new:
-    path:     /new
-    defaults: { _controller: "BlueMediaTaskBundle:Item:new" }
-
-item_create:
-    path:     /create
-    defaults: { _controller: "BlueMediaTaskBundle:Item:create" }
-    methods:  POST
-
-item_edit:
-    path:     /{id}/edit
-    defaults: { _controller: "BlueMediaTaskBundle:Item:edit" }
-
+    path:     /{id}/
+    defaults: { _controller: "BlueMediaTaskBundle:Item:getItem" }
+    methods: [GET]
+    
+#update itemu -  paramter name ( string ), stock ( int ) 
 item_update:
-    path:     /{id}/update
-    defaults: { _controller: "BlueMediaTaskBundle:Item:update" }
-    methods:  [POST, PUT]
+    path:     /{id}/
+    defaults: { _controller: "BlueMediaTaskBundle:Item:updateItem" }
+    methods: [PUT]
 
+#nowy item - paramter name ( string ), stock ( int) 
+item_new:
+    path:     /
+    defaults: { _controller: "BlueMediaTaskBundle:Item:createItem" }
+    methods: [PUT]
+    
+#usuniecie itemu
 item_delete:
-    path:     /{id}/delete
-    defaults: { _controller: "BlueMediaTaskBundle:Item:delete" }
-    methods:  [POST, DELETE]
+    path:     /{id}/
+    defaults: { _controller: "BlueMediaTaskBundle:Item:deleteItem" }
+    methods: [DELETE]
+    
+
+

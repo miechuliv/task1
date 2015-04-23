@@ -1,6 +1,6 @@
 blue_media_task_item:
     resource: "@BlueMediaTaskBundle/Resources/config/routing/item.yml"
-    prefix:   /
+    prefix:   /item/
 
 blue_media_task_homepage:
     path:     /
