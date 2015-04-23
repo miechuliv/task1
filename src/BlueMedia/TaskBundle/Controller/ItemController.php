@@ -3,15 +3,11 @@
 namespace BlueMedia\TaskBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use BlueMedia\TaskBundle\Entity\Item;
 use BlueMedia\TaskBundle\Form\ItemType;
-use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\Response;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Item controller.
@@ -21,28 +17,41 @@ class ItemController extends FOSRestController {
 
     /**
      *
-     * @Template("BlueMediaTaskBundle:Item:get_items.html.twig")
+     * @return json
      */
-    public function getItemsAction() {
-
-        $items = $this->getDoctrine()->getRepository("BlueMediaTaskBundle:Item")->findAll();
+    public function getItemsAction(Request $request) {
+        $instock = $request->query->get('inStock');
+        $minStock = $request->query->get('minStock');
+        if ($instock == 'true') {
+            $items = $this->getDoctrine()->getRepository("BlueMediaTaskBundle:Item")->createQueryBuilder('i')
+                            ->where('i.amount > :amount')
+                            ->setParameter('amount', '0')
+                            ->getQuery()->getResult();
+        } else if ($instock == 'false') {
+            $items = $this->getDoctrine()->getRepository("BlueMediaTaskBundle:Item")->findBy(array(
+                'amount' => '0'
+            ));
+        } else if (isset($minStock) && $minStock != NULL) {
+            $items = $this->getDoctrine()->getRepository("BlueMediaTaskBundle:Item")->createQueryBuilder('i')
+                            ->where('i.amount > :amount')
+                            ->setParameter('amount', $minStock)
+                            ->getQuery()->getResult();
+        } else {
+            $items = $this->getDoctrine()->getRepository("BlueMediaTaskBundle:Item")->findAll();
+        }
         $view = $this->view($items, 200)
-                ->setTemplate("BlueMediaTaskBundle:Item:get_items.html.twig")
-                ->setTemplateVar('items')
                 ->setFormat('json');
 
         return $this->handleView($view);
     }
 
     /**
-     * @Template("BlueMediaTaskBundle:Item:get_item.html.twig")
+     *
+     * @return json
      */
     public function getItemAction($id, Request $request) {
-        $id = $request->get('id');
         $item = $this->getDoctrine()->getRepository("BlueMediaTaskBundle:Item")->find($id);
         $view = $this->view($item, 200)
-                ->setTemplate("BlueMediaTaskBundle:Item:get_item.html.twig")
-                ->setTemplateVar('item')
                 ->setFormat('json');
 
         return $this->handleView($view);
